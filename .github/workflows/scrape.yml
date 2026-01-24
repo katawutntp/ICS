@@ -39,10 +39,19 @@ jobs:
           print(f'Converted {len(records)} records to JSON')
           "
       
-      - name: Commit results
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add booking_result.json || true
-          git commit -m "Update booking results $(date '+%Y-%m-%d %H:%M')" || echo "No changes to commit"
-          git push || echo "Push failed - may need permissions"
+      - name: Upload JSON as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: booking-data
+          path: booking_result.json
+          retention-days: 30
+      
+      - name: Create GitHub Release with JSON
+        uses: softprops/action-gh-release@v1
+        with:
+          files: booking_result.json
+          tag_name: latest-booking-data
+          body: "Booking data from scraper - $(date)"
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+debug_*.html
+calendar_html.txt
+page_structure.html
+booking_result.csv
+booking_result.xlsx
+20260123.xlsx

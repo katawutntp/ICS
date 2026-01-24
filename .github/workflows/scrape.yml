@@ -2,7 +2,7 @@ name: Scrape Calendar
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # ทุก 6 ชั่วโมง
+    - cron: '0 */6 * * *'  # ทุก 6 ชั่วโมง (UTC = ทุก 6 ชม. เวลาไทย)
   workflow_dispatch:  # สามารถ trigger ด้วยมือได้
 
 jobs:
@@ -10,16 +10,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install selenium webdriver-manager pandas python-dateutil openpyxl xlsxwriter
-      - run: python scrape_calendar.py
-      - run: python -c "import pandas as pd; df=pd.read_csv('booking_result.csv'); df.to_json('booking_result.json', orient='records', indent=2, force_ascii=False)"
+      
+      # ติดตั้ง Chrome สำหรับ Selenium
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+      
+      - name: Install Python dependencies
+        run: pip install selenium webdriver-manager pandas python-dateutil openpyxl xlsxwriter
+      
+      - name: Run scraper
+        run: python scrape_calendar.py
+      
+      - name: Convert to JSON
+        run: |
+          python -c "
+          import pandas as pd
+          import json
+          df = pd.read_csv('booking_result.csv')
+          records = df.to_dict(orient='records')
+          with open('booking_result.json', 'w', encoding='utf-8') as f:
+              json.dump(records, f, ensure_ascii=False, indent=2)
+          print(f'Converted {len(records)} records to JSON')
+          "
+      
       - name: Commit results
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add booking_result.*
-          git commit -m "Update booking results $(date)" || echo "No changes to commit"
+          git add booking_result.* || true
+          git commit -m "Update booking results $(date '+%Y-%m-%d %H:%M')" || echo "No changes to commit"
           git push

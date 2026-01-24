@@ -570,6 +570,9 @@ class CalendarScraper:
                             "div.aspect-square"
                         )
                     
+                    booked_days = []  # สีแดง = ติดจอง
+                    pending_days = []  # สีเขียว = รอโอน
+                    
                     for cell in day_cells:
                         try:
                             class_attr = cell.get_attribute("class") or ""
@@ -579,23 +582,27 @@ class CalendarScraper:
                             if "text-gray-400" in class_attr or "text-gray" in class_attr:
                                 continue
                             
-                            # ตรวจสอบว่าเป็นวันติดจอง (สีแดง: bg-red-500)
-                            is_booked = "bg-red" in class_attr
+                            # ตรวจสอบสถานะ
+                            is_booked = "bg-red" in class_attr  # สีแดง = ติดจอง
+                            is_pending = "bg-green" in class_attr  # สีเขียว = รอโอน
                             
-                            if is_booked and cell_text:
-                                # ดึงเลขวัน
+                            if cell_text:
                                 numbers = re.findall(r'\d+', cell_text)
                                 if numbers:
                                     day = int(numbers[0])
                                     if 1 <= day <= days_in_month:
-                                        booked_days.append(day)
+                                        if is_booked:
+                                            booked_days.append(day)
+                                        elif is_pending:
+                                            pending_days.append(day)
                         except:
                             pass
                     
                     # ลบรายการซ้ำ
                     booked_days = sorted(set(booked_days))
+                    pending_days = sorted(set(pending_days))
                     
-                    # เพิ่มลง results
+                    # เพิ่มลง results - สีแดง (ติดจอง)
                     for day in booked_days:
                         results.append({
                             "เว็บไซต์": "Pattaya Party Pool Villa",
@@ -606,9 +613,22 @@ class CalendarScraper:
                             "สถานะ": "ติดจอง"
                         })
                     
-                    if booked_days:
-                        days_str = ', '.join(map(str, booked_days))
-                        print(f"  📅 {month_text}: {len(booked_days)} วัน → [{days_str}]")
+                    # เพิ่มลง results - สีเขียว (รอโอน)
+                    for day in pending_days:
+                        results.append({
+                            "เว็บไซต์": "Pattaya Party Pool Villa",
+                            "ชื่อบ้าน": house_name,
+                            "รหัส": dv_code,
+                            "เดือน": month_text,
+                            "วันที่": day,
+                            "สถานะ": "รอโอน"
+                        })
+                    
+                    total_days = len(booked_days) + len(pending_days)
+                    if total_days > 0:
+                        booked_str = ', '.join(map(str, booked_days)) if booked_days else '-'
+                        pending_str = ', '.join(map(str, pending_days)) if pending_days else '-'
+                        print(f"  📅 {month_text}: ติดจอง [{booked_str}], รอโอน [{pending_str}]")
                     else:
                         print(f"  📅 {month_text}: ว่าง ✓")
                         

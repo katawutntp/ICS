@@ -1,0 +1,184 @@
+<html lang="th"><head>
+    <meta charset="utf-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.min.js"></script>
+    <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <style>
+        .container {
+            font-family: 'Noto Sans', sans-serif;
+            margin-top: 0;
+        }
+
+        h3 {
+            margin-bottom: 30px;
+        }
+
+        th {
+            height: 30px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .today {
+            background: orange;
+        }
+
+        th:nth-of-type(1),
+        td:nth-of-type(1) {
+            color: black;
+        }
+
+        th:nth-of-type(7),
+        td:nth-of-type(7) {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <table class="table table-bordered" style="padding:0;margin:0px;">
+            <tbody><tr>
+                <th colspan="2"><button type="button" class="btn btn-danger text-center btn-sm btn-refresh">อัพเดทล่าสุด 21:19:27 น.</button><br>มกราคม 2569</th>
+            </tr>
+            <tr>
+                <td align="center" valign="middle"><a href="?ym=2025-12&amp;hId=2606" class="btn btn-danger btn-sm w-100"><img src="imgs/bc.png" height="26" border="0"> Prev</a></td>
+                <td align="center" valign="middle"><a href="?ym=2026-02&amp;hId=2606" class="btn btn-danger btn-sm w-100">Next <img src="imgs/nx.png" height="26" border="0"></a></td>
+            </tr>
+        </tbody></table>
+        <table class="table table-bordered">
+            <tbody><tr>
+                <th>อา.</th>
+                <th>จ.</th>
+                <th>อ.</th>
+                <th>พ.</th>
+                <th>พฤ.</th>
+                <th>ศ.</th>
+                <th>ส.</th>
+            </tr>
+            <tr><td></td><td></td><td></td><td></td><td id="2026-01-01" data-day="2026-01-01" data-hid="2606" class="booking" data-bk-day="2026-01-01" data-bk-mm="01" data-bk-dd="01" data-bk-yyyy="2026" style="background-color: red;">1</td><td id="2026-01-02" data-day="2026-01-02" data-hid="2606" class="booking" data-bk-day="2026-01-02" data-bk-mm="01" data-bk-dd="02" data-bk-yyyy="2026" style="background-color: red;">2</td><td id="2026-01-03" data-day="2026-01-03" data-hid="2606" class="booking" data-bk-day="2026-01-03" data-bk-mm="01" data-bk-dd="03" data-bk-yyyy="2026" style="background-color: red;">3</td></tr><tr><td id="2026-01-04" data-day="2026-01-04" data-hid="2606" class="bk">4</td><td id="2026-01-05" data-day="2026-01-05" data-hid="2606" class="bk">5</td><td id="2026-01-06" data-day="2026-01-06" data-hid="2606" class="booking" data-bk-day="2026-01-06" data-bk-mm="01" data-bk-dd="06" data-bk-yyyy="2026" style="background-color: red;">6</td><td id="2026-01-07" data-day="2026-01-07" data-hid="2606" class="bk">7</td><td id="2026-01-08" data-day="2026-01-08" data-hid="2606" class="bk">8</td><td id="2026-01-09" data-day="2026-01-09" data-hid="2606" class="bk">9</td><td id="2026-01-10" data-day="2026-01-10" data-hid="2606" class="bk">10</td></tr><tr><td id="2026-01-11" data-day="2026-01-11" data-hid="2606" class="bk">11</td><td id="2026-01-12" data-day="2026-01-12" data-hid="2606" class="bk">12</td><td id="2026-01-13" data-day="2026-01-13" data-hid="2606" class="bk">13</td><td id="2026-01-14" data-day="2026-01-14" data-hid="2606" class="bk">14</td><td id="2026-01-15" data-day="2026-01-15" data-hid="2606" class="bk">15</td><td id="2026-01-16" data-day="2026-01-16" data-hid="2606" class="bk">16</td><td id="2026-01-17" data-day="2026-01-17" data-hid="2606" class="bk">17</td></tr><tr><td id="2026-01-18" data-day="2026-01-18" data-hid="2606" class="bk">18</td><td id="2026-01-19" data-day="2026-01-19" data-hid="2606" class="bk">19</td><td id="2026-01-20" data-day="2026-01-20" data-hid="2606" class="bk">20</td><td id="2026-01-21" data-day="2026-01-21" data-hid="2606" class="bk">21</td><td id="2026-01-22" data-day="2026-01-22" data-hid="2606" class="booking" data-bk-day="2026-01-22" data-bk-mm="01" data-bk-dd="22" data-bk-yyyy="2026" style="background-color: red;">22</td><td id="2026-01-23" data-day="2026-01-23" data-hid="2606" class="bk">23</td><td id="2026-01-24" data-day="2026-01-24" data-hid="2606" class="booking" data-bk-day="2026-01-24" data-bk-mm="01" data-bk-dd="24" data-bk-yyyy="2026" style="background-color: red;">24</td></tr><tr><td id="2026-01-25" data-day="2026-01-25" data-hid="2606" class="bk">25</td><td id="2026-01-26" data-day="2026-01-26" data-hid="2606" class="bk">26</td><td id="2026-01-27" data-day="2026-01-27" data-hid="2606" class="bk">27</td><td id="2026-01-28" data-day="2026-01-28" data-hid="2606" class="bk">28</td><td id="2026-01-29" data-day="2026-01-29" data-hid="2606" class="bk">29</td><td id="2026-01-30" data-day="2026-01-30" data-hid="2606" class="bk">30</td><td id="2026-01-31" data-day="2026-01-31" data-hid="2606" class="bk">31</td></tr>        </tbody></table>
+        สี <button style="width:20px;height:20px;background:#ff7c00;"></button> = ปิดปรับปรุง-ซ่อม<br>
+        สี <button style="width:20px;height:20px;background:#ffff00;"></button> = วันหยุดยาว-นักขัตฤกษ์<br>
+        <img src="https://www.devillegroups.com/Agent-Checking/imgs/pro.gif" width="20" height="20"> = ราคาพิเศษ<br>
+        สี <button style="width:20px;height:20px;background:#00ff00;"></button> = มีจองแล้ว ยังไม่โอน<br>
+        สี <button style="width:20px;height:20px;background:#ff0000;"></button> = ติดจองแล้ว
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.46/moment-timezone-with-data.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var h = '2606';
+            var d = '2026-01';
+            $.ajax({
+                url: 'getBookings.php',
+                data: {
+                    "hid": h,
+                    "day": d
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var chk_st = data.status;
+                    var chk_dt = data.dt;
+                    var chk_hol = data.hld;
+                    var chk_fire = data.fire;
+                    var timezone = 'Asia/Bangkok'; // ตั้ง timezone ให้ตรงกับที่ต้องการ
+                    chk_hol.forEach(function(dHol) {
+                        var inhol = moment.tz(dHol.chkin, timezone);
+                        var outhol = moment.tz(dHol.chkout, timezone);
+                        while (inhol.isBefore(outhol, 'day')) {
+                            var nhol = inhol.format('YYYY-MM-DD');
+                            if (dHol.st == "holiday") {
+                                $("#" + nhol).css("background-color", "yellow");
+                            } else if (dHol.st == "hotpro") {
+                                $("#" + nhol).css({
+                                    "background-image": "url(https://www.devillegroups.com/Agent-Checking/imgs/pro.gif)",
+                                    "background-size": "65% 65%",
+                                    "background-repeat": "no-repeat",
+                                    "background-position": "center"
+                                });
+                            }
+                            inhol.add(1, 'day');
+                        }
+                    });
+                    chk_fire.forEach(function(fire) {
+                        var firein = moment.tz(fire.chkin, timezone);
+                        var fireout = moment.tz(fire.chkout, timezone);
+                        while (firein.isBefore(fireout, 'day')) {
+                            var nfire = firein.format('YYYY-MM-DD');
+                            $("#" + nfire).css({
+                                "background-image": "url(https://www.devillegroups.com/Agent-Checking/imgs/pro.gif)",
+                                "background-size": "65% 65%",
+                                "background-repeat": "no-repeat",
+                                "background-position": "center"
+                            });
+                            firein.add(1, 'day');
+                        }
+                    });
+                    chk_dt.forEach(function(dtail) {
+                        var chkin = moment.tz(dtail.chkin, timezone);
+                        var chkout = moment.tz(dtail.chkout, timezone);
+                        while (chkin.isBefore(chkout, 'day')) {
+                            var date = chkin.format('YYYY-MM-DD');
+                            var bgcolor;
+                            if (dtail.st == "waiting") {
+                                bgcolor = 'green';
+                                $("#" + date).attr('class', 'waiting');
+                            } else if (dtail.st == "repair") {
+                                bgcolor = 'orange';
+                                $("#" + date).attr('class', 'repair');
+                            } else {
+                                bgcolor = 'red';
+                                $("#" + date).attr('class', 'booking');
+                            }
+                            $("#" + date).css('background-color', bgcolor)
+                                .attr('data-bk-day', date)
+                                .attr('data-bk-mm', chkin.format('MM'))
+                                .attr('data-bk-dd', chkin.format('DD'))
+                                .attr('data-bk-yyyy', chkin.format('YYYY'));
+                            chkin.add(1, 'day');
+                        }
+                    });
+
+                }
+            });
+            $(".btn-refresh").click(function() {
+                window.location.reload();
+            });
+            $(document).delegate('.booking', 'click', function() {
+                var day = $(this).data("bk-day");
+                Swal.fire({
+                    title: 'ติดจองแล้ว',
+                });
+                // console.log('ติดจอง');
+            });
+            $(document).delegate('.waiting', 'click', function() {
+                var day = $(this).data("bk-day");
+                Swal.fire({
+                    title: 'รอโอน',
+                });
+                // console.log('ติดจอง');
+            });
+            $(document).delegate('.repair', 'click', function() {
+                var day = $(this).data("bk-day");
+                Swal.fire({
+                    title: 'ปิดปรับปรุง',
+                });
+                // console.log('ติดจอง');
+            });
+        });
+    </script>
+
+
+</body></html>

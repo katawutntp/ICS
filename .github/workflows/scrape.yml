@@ -46,12 +46,10 @@ jobs:
           path: booking_result.json
           retention-days: 30
       
-      - name: Create GitHub Release with JSON
-        uses: softprops/action-gh-release@v1
-        with:
-          files: booking_result.json
-          tag_name: latest-booking-data
-          body: "Booking data from scraper - $(date)"
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit JSON to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add booking_result.json -f
+          git commit -m "Update booking results $(date '+%Y-%m-%d %H:%M')" || echo "No changes"
+          git push origin master

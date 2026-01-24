@@ -1,0 +1,25 @@
+name: Scrape Calendar
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # ทุก 6 ชั่วโมง
+  workflow_dispatch:  # สามารถ trigger ด้วยมือได้
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install selenium webdriver-manager pandas python-dateutil openpyxl xlsxwriter
+      - run: python scrape_calendar.py
+      - run: python -c "import pandas as pd; df=pd.read_csv('booking_result.csv'); df.to_json('booking_result.json', orient='records', indent=2, force_ascii=False)"
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add booking_result.*
+          git commit -m "Update booking results $(date)" || echo "No changes to commit"
+          git push

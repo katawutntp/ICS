@@ -2,7 +2,7 @@ name: Scrape Calendar
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # ทุก 6 ชั่วโมง (UTC = ทุก 6 ชม. เวลาไทย)
+    - cron: '*/5 * * * *'  # ทุก 6 ชั่วโมง (UTC = ทุก 6 ชม. เวลาไทย)
   workflow_dispatch:  # สามารถ trigger ด้วยมือได้
 
 permissions:

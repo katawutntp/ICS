@@ -13,8 +13,9 @@ from dateutil.relativedelta import relativedelta
 from urllib.parse import urlparse
 
 # ===== CONFIG =====
-MONTH_TO_SCRAPE = 5   # 👈 จำนวนเดือนที่ต้องการ
-MAX_HOUSES = 0        # 👈 จำนวนบ้านที่ต้องการดึง (0 = ทั้งหมด)
+MONTH_TO_SCRAPE = 2   # 👈 จำนวนเดือนที่ต้องการ (ลดลงเพื่อ debug)
+MAX_HOUSES = 20       # 👈 จำนวนบ้านที่ต้องการดึง (0 = ทั้งหมด) - เพิ่มเพื่อดึง Madagascar 4
+DEBUG_MODE = True     # 👈 เปิด debug mode เพื่อบันทึก HTML/screenshot
 
 # รายการ URL ที่ต้องการ scrape (รองรับหลายเว็บ) — ใช้เป็น fallback
 URLS = [
@@ -227,7 +228,7 @@ class CalendarScraper:
                     calendar_url = f"{BASE_IFRAME_URL}?ym={ym}&hId={h_id}"
                     
                     self.driver.get(calendar_url)
-                    time.sleep(2)
+                    time.sleep(3)  # เพิ่ม delay ให้ปฏิทินโหลดครบ
                     
                     wait = WebDriverWait(self.driver, 10)
                     
@@ -246,27 +247,55 @@ class CalendarScraper:
                     except:
                         month_text = ym
                     
-                    # ดึงวันที่ติดจอง (สีแดง = booking)
+                    # ดึงวันที่ติดจอง (สีแดง = booking, สีเขียว = waiting)
+                    # แก้ไข: กรองเฉพาะวันที่ของเดือนปัจจุบัน (ไม่ใช่เดือนก่อน/หลัง)
                     booked_cells = self.driver.find_elements(
                         By.XPATH,
-                        "//td[contains(@class,'booking') or contains(@style,'red')]"
+                        "//td[(contains(@class,'booking') or contains(@class,'waiting')) and not(contains(@class,'prev')) and not(contains(@class,'next')) and not(contains(@class,'other'))]"
                     )
+                    
+                    # Debug: บันทึก HTML ถ้าเปิด DEBUG_MODE (สำหรับ Madagascar 4)
+                    if DEBUG_MODE and "2265" in h_id:
+                        debug_file = f"debug_madagascar4_{ym}.html"
+                        with open(debug_file, "w", encoding="utf-8") as f:
+                            f.write(self.driver.page_source)
+                        print(f"  💾 Debug Madagascar 4: บันทึก {debug_file}")
                     
                     booked_count = 0
                     booked_days = []
                     for cell in booked_cells:
-                        day = cell.text.strip()
-                        if day.isdigit():
-                            booked_days.append(int(day))
-                            results.append({
-                                "เว็บไซต์": "Deville Groups",
-                                "ชื่อบ้าน": house_name,
-                                "รหัส": dv_code,
-                                "เดือน": month_text,
-                                "วันที่": int(day),
-                                "สถานะ": "ติดจอง"
-                            })
-                            booked_count += 1
+                        try:
+                            # ตรวจสอบว่า td มี class ที่บ่งบอกว่าเป็นวันของเดือนอื่นหรือไม่
+                            cell_class = cell.get_attribute("class") or ""
+                            
+                            # ข้ามวันที่ของเดือนอื่น
+                            if any(x in cell_class for x in ['prev', 'next', 'other', 'disabled']):
+                                continue
+                            
+                            # ลองหาตัวเลขจาก div ภายใน td ก่อน
+                            try:
+                                day_element = cell.find_element(By.TAG_NAME, "div")
+                                day = day_element.text.strip()
+                            except:
+                                # ถ้าไม่มี div ให้ใช้ text จาก td โดยตรง
+                                day = cell.text.strip()
+                            
+                            # กรองเฉพาะตัวเลข (ไม่รวม header)
+                            if day.isdigit():
+                                day_int = int(day)
+                                # ข้าม header row หรือค่าที่ไม่ใช่วันที่
+                                if 1 <= day_int <= 31 and day_int not in booked_days:
+                                    booked_days.append(day_int)
+                                    results.append({
+                                        "ชื่อบ้าน": house_name,
+                                        "รหัส": dv_code,
+                                        "เดือน": month_text,
+                                        "วันที่": day_int,
+                                        "สถานะ": "ติดจอง"
+                                    })
+                                    booked_count += 1
+                        except Exception as e:
+                            continue
                     
                     if booked_days:
                         days_str = ', '.join(map(str, sorted(booked_days)))
@@ -415,7 +444,6 @@ class CalendarScraper:
                     by_month[month_key].append(int(day))
                     
                     results.append({
-                        "เว็บไซต์": "Pool Villa City",
                         "ชื่อบ้าน": house_name,
                         "รหัส": house_code,
                         "เดือน": month_key,
@@ -605,7 +633,6 @@ class CalendarScraper:
                     # เพิ่มลง results - สีแดง (ติดจอง)
                     for day in booked_days:
                         results.append({
-                            "เว็บไซต์": "Pattaya Party Pool Villa",
                             "ชื่อบ้าน": house_name,
                             "รหัส": dv_code,
                             "เดือน": month_text,
@@ -616,7 +643,6 @@ class CalendarScraper:
                     # เพิ่มลง results - สีเขียว (รอโอน)
                     for day in pending_days:
                         results.append({
-                            "เว็บไซต์": "Pattaya Party Pool Villa",
                             "ชื่อบ้าน": house_name,
                             "รหัส": dv_code,
                             "เดือน": month_text,

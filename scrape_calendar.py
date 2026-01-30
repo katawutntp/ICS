@@ -746,6 +746,17 @@ def main():
         except Exception as e:
             print(f"❌ Error scraping {url}: {e}")
 
+    # สรุปจำนวนบ้านที่ดึงได้ทั้งหมด (นับแบบไม่ซ้ำ)
+    unique_houses = set()
+    for row in all_results:
+        name = str(row.get("ชื่อบ้าน", "")).strip()
+        code = str(row.get("รหัส", "")).strip()
+        key = f"{code}|{name}" if code or name else ""
+        if key:
+            unique_houses.add(key)
+    if unique_houses:
+        print(f"\n🏠 ดึงข้อมูลได้ทั้งหมด {len(unique_houses)} หลัง")
+
     driver.quit()
 
     # กรองวันที่ก่อนวันปัจจุบันออก
